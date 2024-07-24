@@ -9,12 +9,22 @@ django.setup()
 
 User = get_user_model()
 
-username = os.getenv('DJANGO_SUPERUSER_USERNAME')
-email = os.getenv('DJANGO_SUPERUSER_EMAIL')
-password = os.getenv('DJANGO_SUPERUSER_PASSWORD')
+users = [
+    {
+        'username': os.getenv('DJANGO_SUPERUSER1_USERNAME'),
+        'email': os.getenv('DJANGO_SUPERUSER1_EMAIL'),
+        'password': os.getenv('DJANGO_SUPERUSER1_PASSWORD'),
+    },
+    {
+        'username': os.getenv('DJANGO_SUPERUSER2_USERNAME'),
+        'email': os.getenv('DJANGO_SUPERUSER2_EMAIL'),
+        'password': os.getenv('DJANGO_SUPERUSER2_PASSWORD'),
+    }
+]
 
-if User.objects.filter(username=username).exists():
-    print('El usuario ya existe. No se creará un nuevo superusuario.')
-else:
-    User.objects.create_superuser(username=username, email=email, password=password)
-    print('Superusuario creado exitosamente.')
+for user in users:
+    if User.objects.filter(username=user['username']).exists():
+        print(f"El usuario {user['username']} ya existe. No se creará un nuevo superusuario.")
+    else:
+        User.objects.create_superuser(username=user['username'], email=user['email'], password=user['password'])
+        print(f"Superusuario {user['username']} creado exitosamente.")
